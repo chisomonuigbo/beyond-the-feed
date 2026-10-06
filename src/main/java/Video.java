@@ -29,4 +29,24 @@ public class Video {
     public int getDuration(){
         return duration;
     }
+
+    public boolean isValid() {
+    if (url == null || url.isBlank()) {
+        return false;
+    }
+
+    if (title == null || title.isBlank()) {
+        return false;
+    }
+
+    if (topics == null || topics.isEmpty()) {
+        return false;
+    }
+
+    if (duration <= 0) {
+        return false;
+    }
+
+    return true;
+}
 }
