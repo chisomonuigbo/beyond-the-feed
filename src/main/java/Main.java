@@ -39,10 +39,37 @@ public class Main {
             System.out.println("Invalid data found in " + mediaSource);
         }
 
-        ArrayList<Recommendation> recommendations = new ArrayList<Recommendation>();
-        
-        ArrayList<String> chosenTopics = new ArrayList<String>(List.of("Lifestyle", "College"));
+        HashSet<String> availableTopics = new HashSet<>();
+        for (Video x : mediaList){
+            for (String y : x.getTopics()) {
+                availableTopics.add(y);
+            }
+        }
 
+        ArrayList<String> allTopics = new ArrayList<>(availableTopics);
+
+        System.out.println("Select some topics you like to watch:");
+        for(int i = 0; i < allTopics.size(); i++){
+            System.out.println((i + 1) + ". " + allTopics.get(i));
+        }
+        System.out.println("Enter your chosen topics seperated by spaces! Example: \"1 2 3 4\"");
+        
+        Scanner scanner = new Scanner(System.in);
+        String userTopicInput = scanner.nextLine();
+        String[] chosenTopics = userTopicInput.split(" ");
+
+        ArrayList<Recommendation> recommendations = new ArrayList<Recommendation>();
+
+
+        HashMap<String, Integer> topicWeights = new HashMap<>();
+        for (int x = 0; x < chosenTopics.length; ++x){
+            String key = allTopics.get(Integer.parseInt(chosenTopics[x]) - 1);
+            topicWeights.put(key, 1);
+        }
+
+        System.out.println(topicWeights);
+
+        // I am changing to use weighted scoring instead of +1 by matching topic
         for (Video x : mediaList){
             int score = 0;
             String reason = "This video contains the topics: ";
