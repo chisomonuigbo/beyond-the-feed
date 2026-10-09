@@ -1,3 +1,4 @@
+package com.beyondthefeed.model;
 import java.util.*;
 
 public class Video {

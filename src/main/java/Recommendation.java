@@ -1,3 +1,5 @@
+import com.beyondthefeed.model.Video;
+
 public class Recommendation {
     private final Video recommendation;
     private final String reason;

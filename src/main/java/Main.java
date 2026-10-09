@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException; // do not need both but lets use filenotfound
 import java.lang.reflect.Type;
 
+import com.beyondthefeed.model.Video;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -67,16 +68,37 @@ public class Main {
             topicWeights.put(key, 1);
         }
 
+        boolean validLevel = false;
+        int discoveryLevel = 0;
+
+        while(!validLevel){
+            System.out.println("Choose your discovery level for new unfamiliar topics (0-100):");
+            String discoveryLevelInput = scanner.nextLine();
+            try{
+                discoveryLevel = Integer.parseInt(discoveryLevelInput);
+                if(discoveryLevel > 100 || discoveryLevel < 0){
+                    System.out.println("Level must be between 0 to 100. Try again.");
+                } else{
+                    validLevel = true;
+                }
+
+            } catch (NumberFormatException e){
+                System.out.println("That is not a valid level. Please enter a number.");
+            }
+        }
+
+
         System.out.println(topicWeights);
 
         // I am changing to use weighted scoring instead of +1 by matching topic
         for (Video x : mediaList){
             int score = 0;
             String reason = "This video contains the topics: ";
-            for (String y : chosenTopics){
-                if(x.getTopics().contains(y)){
+
+            for (String y : x.getTopics()){
+                if(topicWeights.containsKey(y)){
                     reason += y + " ";
-                    score++;
+                    score += topicWeights.get(y);
                 }
             }
             if (score == 0){
