@@ -3,7 +3,7 @@ Beyond the Feed is a Java video recommendation project built around a question: 
 
 The goal is to let users explore beyond their usual interests while understanding why each video was recommended. 
 
-The project began as a terminal-based Java application and is currently being developed into a full-stack web application using React, Java Spring Boot, and PostgreSQL.
+The project began as a terminal-based Java application and is currently being developed into a full-stack web application using React, Java Spring Boot, and PostgreSQL (planned).
 
 ### What currently works
 ###### Video Data Management
@@ -28,11 +28,32 @@ The project began as a terminal-based Java application and is currently being de
 - Organized backend code into packages to separate data models from API controllers.
 - Successfully tested API locally
 
+### React Frontend
+- Initialized a React application using Vite.
+- Built a responsive video dashboard using CSS Grid.
+- Connected React to the Spring Boot backend using asynchronous API requests.
+- Configured a Vite development proxy to forward /api requests to Spring Boot.
+- Implemented loading and error states for video fetching.
+- Created clickable video cards displaying video titles and topics.
+- Used React state to track the currently selected video.
+- Embedded TikTok videos directly into the application using TikTok's official player.
+- Added a Close Video button and configured the embedded player to limit related recommendations to the same creator.
+
 ### Project Structure
 
 beyond-the-feed/
 ├── data/
 │   └── videos.json
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── App.css
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── package.json
+│   ├── vite.config.js
+│   └── index.html
 ├── src/
 │   └── main/
 │       └── java/
@@ -56,16 +77,28 @@ beyond-the-feed/
 - `BeyondTheFeedApplication.java` — Entry point for the Spring Boot backend.
 - `VideoController.java` — Handles API requests and returns validated video data.
 - `videos.json` — Stores the entire video dataset.
+- `App.jsx` — React component responsible for fetching, displaying, and selecting videos.
+- `App.css` — Styles the video dashboard, cards, and embedded player.
+- `vite.config.js` — Configures Vite and the development API proxy.
 - `pom.xml` — Manages Maven dependencies, Java configuration, and Spring Boot build settings.
+- `frontend/package.json` — Manages frontend dependencies and development scripts.
 
 
 ### Technologies
-- Maven
-- Spring Boot
+##### Frontend
+- React
+- JavaScript (JSX)
+- HTML and CSS
+- Vite
+
+###### Backend
 - Java 17
+- Spring Boot
+- Maven
 - Gson
-- JSON
 - REST APIs
+- JSON
+
 
 ### Running the Project
 
@@ -83,8 +116,28 @@ http://localhost:8080/api/videos
 
 This endpoint returns validated video objects from the dataset in JSON format.
 
+### Start the React Frontend
+
+Open a second terminal and navigate to the frontend directory:
+
+cd frontend
+npm install
+npm run dev
+
+Open:
+
+http://localhost:5173
+
+Both servers must be running for the React application to retrieve video data from Spring Boot.
+
 ##### Run the original terminal recommendation application:
 
 mvn exec:java -Dexec.mainClass="Main"
 
 The terminal application provides interest selection and recommendation ranking while the web interface is under development.
+
+### Project Status
+
+In active development.
+
+The application currently supports browsing and watching TikTok videos through a React frontend connected to a Java Spring Boot API. Personalized recommendation ranking is implemented in the original terminal application, with web integration and persistent user profiles planned for future development.

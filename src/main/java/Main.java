@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
-import java.io.IOException; // do not need both but lets use filenotfound
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 import com.beyondthefeed.model.Video;
