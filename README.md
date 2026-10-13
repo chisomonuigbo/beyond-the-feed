@@ -27,6 +27,7 @@ The project began as a terminal-based Java application and is currently being de
 - Implemented exception handling for malformed JSON and file-reading errors.
 - Organized backend code into packages to separate data models from API controllers.
 - Successfully tested API locally
+- Created a `Feedback` model to represent video reactions, with basic validation for video URLs and reaction values.
 
 ### React Frontend
 - Initialized a React application using Vite.
@@ -38,36 +39,10 @@ The project began as a terminal-based Java application and is currently being de
 - Used React state to track the currently selected video.
 - Embedded TikTok videos directly into the application using TikTok's official player.
 - Added a Close Video button and configured the embedded player to limit related recommendations to the same creator.
-
-### Project Structure
-
-beyond-the-feed/
-├── data/
-│   └── videos.json
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── package.json
-│   ├── vite.config.js
-│   └── index.html
-├── src/
-│   └── main/
-│       └── java/
-│           ├── Main.java
-│           ├── Recommendation.java
-│           └── com/
-│               └── beyondthefeed/
-│                   ├── BeyondTheFeedApplication.java
-│                   ├── controller/
-│                   │   └── VideoController.java
-│                   └── model/
-│                       └── Video.java
-├── pom.xml
-└── README.md
+- Implemented per-video Like and Dislike buttons with mutually exclusive reaction states.
+- Added the ability to toggle reactions on and off or switch between Like and Dislike.
+- Used React state to preserve individual video reactions when switching between videos during a session.
+- Refactored reaction handling into a reusable function to support future backend integration.
 
 
 ### Project Structure
@@ -82,6 +57,7 @@ beyond-the-feed/
 - `vite.config.js` — Configures Vite and the development API proxy.
 - `pom.xml` — Manages Maven dependencies, Java configuration, and Spring Boot build settings.
 - `frontend/package.json` — Manages frontend dependencies and development scripts.
+- `Feedback.java` — Represents a video's Like/Dislike interaction and validates incoming feedback data.
 
 
 ### Technologies
@@ -140,4 +116,8 @@ The terminal application provides interest selection and recommendation ranking 
 
 In active development.
 
-The application currently supports browsing and watching TikTok videos through a React frontend connected to a Java Spring Boot API. Personalized recommendation ranking is implemented in the original terminal application, with web integration and persistent user profiles planned for future development.
+Beyond the Feed currently supports browsing and watching TikTok videos through a React frontend connected to a Java Spring Boot API. Users can like, dislike, and undo reactions on individual videos, with feedback maintained in React state during the session.
+
+Personalized recommendation ranking is implemented in the original terminal application but has not yet been integrated into the web interface.
+
+Next steps include implementing a Spring Boot feedback API, persisting user interactions, integrating the recommendation algorithm into the web application, and adding user profiles.

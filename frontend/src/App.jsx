@@ -18,6 +18,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedVideo, setSelectedVideo] = useState(null)
+  const [videoReactions, setVideoReactions] = useState({})
 
   useEffect(() => {
     async function fetchVideos() {
@@ -48,6 +49,14 @@ function App() {
     console.log(getTikTokEmbedUrl(video.url))
   }
 
+  function handleReaction(reactionType) {
+    const currentReaction = videoReactions[selectedVideo.url]
+
+    const newReaction = currentReaction === reactionType ? null : reactionType
+
+    setVideoReactions(prev => ({ ...prev, [selectedVideo.url]: newReaction}))
+  }
+
   return (
     <div className="app">
       <h1>Beyond the Feed</h1>
@@ -74,8 +83,12 @@ function App() {
             allow="fullscreen"
             allowFullScreen
           />
+          <button onClick={() => handleReaction("liked")}
+            >{videoReactions[selectedVideo.url] === "liked" ? "Liked" : "Like"}</button>
+          <button onClick={() => handleReaction("disliked")}
+            >{videoReactions[selectedVideo.url] === "disliked" ? "Disliked" : "Dislike"}</button>
 
-          <button className="close" onClick={() => {setSelectedVideo(null)}}>Close Video</button>
+          <button className="close" onClick={() => setSelectedVideo(null)}>Close Video</button>
 
         </div>
       )}
