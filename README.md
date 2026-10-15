@@ -1,123 +1,81 @@
-### What is Beyond the Feed
-Beyond the Feed is a Java video recommendation project built around a question: how can we discover unfamiliar content instead of watching the same kinds of videos repeatedly?
+# Beyond the Feed
 
-The goal is to let users explore beyond their usual interests while understanding why each video was recommended. 
+Beyond the Feed is a full-stack video discovery application designed to help users explore content beyond their usual interests through personalized recommendations and transparent explanations.
 
-The project began as a terminal-based Java application and is currently being developed into a full-stack web application using React, Java Spring Boot, and PostgreSQL (planned).
+Originally developed as a Java terminal application, the project is being expanded into a web application using React and Spring Boot.
 
-### What currently works
-###### Video Data Management
-- Videos are dynamically loaded from `data/videos.json` and deserialized using Gson rather than being hardcoded.
-- Video objects are validated using custom validation logic, and invalid entries are filtered out.
-- Available topics are dynamically extracted from the video dataset.
+## Features
 
-##### Recommendation Algorithm
-- Users can select their initial interests through a terminal-based onboarding menu.
-- User interests are stored in a `HashMap<String, Integer>` to represent topic weights.
-- Each video's relevance score is calculated using the weights of matching topics.
-- Recommendations include explanations identifying the topics contributing to their relevance scores.
-- Recommendations are ranked from highest to lowest relevance score.
-- Users can select a discovery preference between 0% and 100% through the terminal interface.
+##### Video Discovery
+- Browse and watch embedded TikTok videos through a responsive React interface.
+- Load and validate video data dynamically from JSON.
 
+##### Personalized Recommendations (Terminal)
+- Rank videos using weighted user interests and topic relevance.
+- Explain why videos are recommended based on matching topics.
+- Allow users to adjust their discovery preference from 0% to 100%.
 
-##### Java Spring Boot Backend
-- Integrated Spring Boot into the existing Maven project.
-- Created a REST API endpoint, GET /api/videos, that returns video data as JSON.
-- Preserved Gson deserialization and video validation within the backend
-- Implemented exception handling for malformed JSON and file-reading errors.
-- Organized backend code into packages to separate data models from API controllers.
-- Successfully tested API locally
-- Created a `Feedback` model to represent video reactions, with basic validation for video URLs and reaction values.
+##### User Feedback
+- Like, Dislike, or undo reactions on individual videos.
+- Send reactions to Spring Boot through `POST /api/feedback`.
+- Update reactions immediately, with automatic rollback and per-video error handling if requests fail.
 
-### React Frontend
-- Initialized a React application using Vite.
-- Built a responsive video dashboard using CSS Grid.
-- Connected React to the Spring Boot backend using asynchronous API requests.
-- Configured a Vite development proxy to forward /api requests to Spring Boot.
-- Implemented loading and error states for video fetching.
-- Created clickable video cards displaying video titles and topics.
-- Used React state to track the currently selected video.
-- Embedded TikTok videos directly into the application using TikTok's official player.
-- Added a Close Video button and configured the embedded player to limit related recommendations to the same creator.
-- Implemented per-video Like and Dislike buttons with mutually exclusive reaction states.
-- Added the ability to toggle reactions on and off or switch between Like and Dislike.
-- Used React state to preserve individual video reactions when switching between videos during a session.
-- Refactored reaction handling into a reusable function to support future backend integration.
+## Tech Stack
 
+- Frontend: React, JavaScript, Vite, CSS
+- Backend: Java 17, Spring Boot, Maven, Gson
+- Data: JSON (PostgreSQL planned)
+- Communication: REST APIs, Fetch API
 
-### Project Structure
-- `Main.java` — Original terminal application responsible for user onboarding, topic selection, and recommendation ranking.
-- `Recommendation.java` — Represents a recommended video, its relevance score, and its explanation.
-- `Video.java` — Represents video attributes and provides validation methods.
-- `BeyondTheFeedApplication.java` — Entry point for the Spring Boot backend.
-- `VideoController.java` — Handles API requests and returns validated video data.
-- `videos.json` — Stores the entire video dataset.
-- `App.jsx` — React component responsible for fetching, displaying, and selecting videos.
-- `App.css` — Styles the video dashboard, cards, and embedded player.
-- `vite.config.js` — Configures Vite and the development API proxy.
-- `pom.xml` — Manages Maven dependencies, Java configuration, and Spring Boot build settings.
-- `frontend/package.json` — Manages frontend dependencies and development scripts.
-- `Feedback.java` — Represents a video's Like/Dislike interaction and validates incoming feedback data.
+## Architecture
 
+- `Main.java` / `Recommendation.java` — Terminal-based onboarding and recommendation ranking.
+- `Video.java` / `Feedback.java` — Data models and validation.
+- `VideoController.java` — Serves validated videos through `GET /api/videos`.
+- `FeedbackController.java` — Receives and validates reactions through `POST /api/feedback`.
+- `App.jsx` — React interface for video browsing, playback, and feedback.
+- `data/videos.json` — Video dataset.
 
-### Technologies
-##### Frontend
-- React
-- JavaScript (JSX)
-- HTML and CSS
-- Vite
+## Getting Started
 
-###### Backend
-- Java 17
-- Spring Boot
-- Maven
-- Gson
-- REST APIs
-- JSON
+**1. Start the backend**
 
-
-### Running the Project
-
-##### Start the Spring Boot backend:
-
+```bash
 mvn spring-boot:run
+```
 
-The backend runs locally at:
+Backend: `http://localhost:8080`
 
-http://localhost:8080
+**2. Start the frontend**
 
-##### View the video API:
-
-http://localhost:8080/api/videos
-
-This endpoint returns validated video objects from the dataset in JSON format.
-
-### Start the React Frontend
-
-Open a second terminal and navigate to the frontend directory:
-
+```bash
 cd frontend
 npm install
 npm run dev
+```
 
-Open:
+Frontend: `http://localhost:5173`
 
-http://localhost:5173
+Both servers must be running for the web application to work.
 
-Both servers must be running for the React application to retrieve video data from Spring Boot.
+**3. Run the original recommendation application (optional)**
 
-##### Run the original terminal recommendation application:
-
+```bash
 mvn exec:java -Dexec.mainClass="Main"
+```
 
-The terminal application provides interest selection and recommendation ranking while the web interface is under development.
+## Project Status
 
-### Project Status
+**In active development.**
 
-In active development.
+The web application currently supports video browsing, TikTok playback, and Like/Dislike interactions connected to the Spring Boot feedback API.
 
-Beyond the Feed currently supports browsing and watching TikTok videos through a React frontend connected to a Java Spring Boot API. Users can like, dislike, and undo reactions on individual videos, with feedback maintained in React state during the session.
+The recommendation algorithm is functional in the terminal application but has not yet been integrated into the web interface.
 
-Personalized recommendation ranking is implemented in the original terminal application but has not yet been integrated into the web interface.
+**Current limitations:** Feedback is validated but not permanently stored. Reactions reset on refresh, and concurrent feedback requests need further testing.
 
-Next steps include implementing a Spring Boot feedback API, persisting user interactions, integrating the recommendation algorithm into the web application, and adding user profiles.
+**Next Steps**
+- Add persistent feedback storage.
+- Integrate personalized recommendations into the web application.
+- Connect engagement signals to recommendation ranking.
+- Implement user profiles and preferences.

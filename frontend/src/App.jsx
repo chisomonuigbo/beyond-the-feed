@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import './App.css'
 
 function getTikTokEmbedUrl(url) {
@@ -17,8 +17,10 @@ function App() {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [feedbackErrors, setFeedbackErrors] = useState({});
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [videoReactions, setVideoReactions] = useState({})
+  const latestFeedbackRequest = useRef({});
 
   useEffect(() => {
     async function fetchVideos() {
@@ -50,12 +52,49 @@ function App() {
   }
 
   function handleReaction(reactionType) {
-    const currentReaction = videoReactions[selectedVideo.url]
+    const videoUrl = selectedVideo.url;
+    setFeedbackErrors(prev => ({ ... prev, [videoUrl]: null}))
+    const prevRequest = latestFeedbackRequest.current[videoUrl] ?? 0;
+    const requestId = prevRequest + 1;
+    latestFeedbackRequest.current[videoUrl] = requestId;
+    const currentReaction = videoReactions[videoUrl]
 
     const newReaction = currentReaction === reactionType ? null : reactionType
 
-    setVideoReactions(prev => ({ ...prev, [selectedVideo.url]: newReaction}))
+    setVideoReactions(prev => ({ ...prev, [videoUrl]: newReaction}))
+
+    async function postFeedback() {
+      const data = { 
+        videoUrl,
+        reaction: newReaction
+
+      }
+
+      try {
+        const response = await fetch('/api/feedback', {
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": JSON.stringify(data)
+
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to save feedback')
+        }
+        
+      } catch (err) {
+        if(latestFeedbackRequest.current[videoUrl] === requestId){
+          setFeedbackErrors(prev => ({ ...prev, [videoUrl]: err.message}))
+          setVideoReactions(prev => ({ ...prev, [videoUrl]: currentReaction}))
+        }
+        
+      }
+    }
+    postFeedback()
   }
+  
 
   return (
     <div className="app">
@@ -74,6 +113,9 @@ function App() {
       </div>
       {selectedVideo && (
         <div className="selected-video">
+          {feedbackErrors[selectedVideo.url] && (
+            <p>{feedbackErrors[selectedVideo.url]}</p>
+          )} 
           <h2>Now Playing: {selectedVideo.title}</h2>
           <iframe
             src={getTikTokEmbedUrl(selectedVideo.url)}
